@@ -4,6 +4,7 @@ class JobPost < ApplicationRecord
 
   belongs_to :company
 
+  # not optimized search
   include PgSearch::Model
   pg_search_scope(
     :search,
@@ -15,6 +16,11 @@ class JobPost < ApplicationRecord
       },
     },
   )
+
+  def self.faster_search(query)
+    # protip: when using `select` instead of `pluck` we have one query less
+    where(id: JobPostSearch.search(query).select(:job_post_id))
+  end
 end
 
 # == Schema Information
