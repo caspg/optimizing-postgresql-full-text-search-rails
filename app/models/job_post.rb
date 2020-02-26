@@ -8,6 +8,7 @@ class JobPost < ApplicationRecord
   pg_search_scope(
     :search,
     against: [:title, :description],
+    associated_against: { skills: :name, company: :name },
     using: {
       tsearch: {
         dictionary: 'english',

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_26_183228) do
+ActiveRecord::Schema.define(version: 2020_02_26_185746) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -42,5 +42,17 @@ ActiveRecord::Schema.define(version: 2020_02_26_183228) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
+
+
+  create_view "job_post_searches", materialized: true, sql_definition: <<-SQL
+      SELECT job_posts.id AS job_post_id,
+      (((to_tsvector('english'::regconfig, (COALESCE(job_posts.title, ''::character varying))::text) || to_tsvector('english'::regconfig, COALESCE(job_posts.description, ''::text))) || to_tsvector('english'::regconfig, (COALESCE(companies.name, ''::character varying))::text)) || to_tsvector('english'::regconfig, COALESCE(string_agg((skills.name)::text, ' ; '::text), ''::text))) AS tsv_document
+     FROM (((job_posts
+       JOIN companies ON ((companies.id = job_posts.company_id)))
+       JOIN job_post_skills ON ((job_post_skills.job_post_id = job_posts.id)))
+       JOIN skills ON ((skills.id = job_post_skills.skill_id)))
+    GROUP BY job_posts.id, companies.id;
+  SQL
+  add_index "job_post_searches", ["tsv_document"], name: "index_job_post_searches_on_tsv_document", using: :gin
 
 end
