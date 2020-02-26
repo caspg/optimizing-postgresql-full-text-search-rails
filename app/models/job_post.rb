@@ -3,6 +3,17 @@ class JobPost < ApplicationRecord
   has_many :skills, through: :job_post_skills
 
   belongs_to :company
+
+  include PgSearch::Model
+  pg_search_scope(
+    :search,
+    against: [:title, :description],
+    using: {
+      tsearch: {
+        dictionary: 'english',
+      },
+    },
+  )
 end
 
 # == Schema Information
