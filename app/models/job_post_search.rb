@@ -15,7 +15,11 @@ class JobPostSearch < ApplicationRecord
   )
 
   def self.refresh_materialized_view
-    # TODO
+    Scenic.database.refresh_materialized_view(
+      :job_post_searches,
+      concurrently: true,
+      cascade: false,
+    )
   end
 
   def readonly?
@@ -28,9 +32,10 @@ end
 # Table name: job_post_searches
 #
 #  tsv_document :tsvector
-#  job_post_id  :bigint
+#  job_post_id  :bigint           primary key
 #
 # Indexes
 #
+#  index_job_post_searches_on_job_post_id   (job_post_id) UNIQUE
 #  index_job_post_searches_on_tsv_document  (tsv_document) USING gin
 #
