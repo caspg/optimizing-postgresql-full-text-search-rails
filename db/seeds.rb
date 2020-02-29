@@ -4,7 +4,7 @@ tesla = Company.create(name: 'tesla')
 ruby_skill = Skill.create(name: 'ruby')
 postgres_skill = Skill.create(name: 'postgres')
 
-random_skills = (0...5).map { Skill.create(name: SecureRandom.hex(5)) }
+random_skills = (0...5).map { Skill.create(name: Faker::Name.last_name) }
 
 6000.times do
   job_post = JobPost.create!(

@@ -1,7 +1,6 @@
 class JobPost < ApplicationRecord
   has_many :job_post_skills, dependent: :destroy
   has_many :skills, through: :job_post_skills
-
   belongs_to :company
 
   # not optimized search
