@@ -6,7 +6,7 @@ postgres_skill = Skill.create(name: 'postgres')
 
 random_skills = (0...5).map { Skill.create(name: Faker::Name.last_name) }
 
-6000.times do
+50.times do
   job_post = JobPost.create!(
     company: spacex,
     title: 'Senior Ruby on Rails developer',
@@ -20,11 +20,11 @@ random_skills = (0...5).map { Skill.create(name: Faker::Name.last_name) }
   print "."
 end
 
-4000.times do
+9950.times do
   job_post = JobPost.create!(
     company: tesla,
-    title: 'Software Engineer',
-    description: 'Elixir is a functional, concurrent, general-purpose programming language that runs on the Erlang virtual machine.',
+    title: Faker::Lorem.paragraph,
+    description: Faker::Lorem.paragraph(sentence_count: 15),
   )
 
   JobPostSkill.create(job_post: job_post, skill: postgres_skill)
